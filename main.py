@@ -61,6 +61,8 @@ for word in readTextFile('inp.txt'):
     # If word not in dict.json
     if word not in d:
         d[word] = defaultdict(list, {'English': list(), 'Turkish': list()})
+        # Trace
+        print(f'Adding English meaning for {word}')
         # Read Lexico website
         lexico = requests.get(URL_LEX + word).text
         # Create BeautifulSoup obj of the Lexico website
@@ -71,6 +73,8 @@ for word in readTextFile('inp.txt'):
         for idx, cls_ind in enumerate(section.find_all('span', class_='ind')):
             # Append English meanings to dictionary
             d[word]['English'].append(str(cls_ind.text))
+        # Trace
+        print(f'Adding Turkish meaning for {word}')
         # Read TurEng website
         tureng = requests.get(URL_TUR + word).text
         # Create BeautifulSoup obj of the TurEng website
