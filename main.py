@@ -71,6 +71,16 @@ for word in readTextFile('inp.txt'):
         for idx, cls_ind in enumerate(section.find_all('span', class_='ind')):
             # Append English meanings to dictionary
             d[word]['English'].append(str(cls_ind.text))
+        # Read TurEng website
+        tureng = requests.get(URL_TUR + word).text
+        # Create BeautifulSoup obj of the TurEng website
+        soup = BeautifulSoup(tureng, 'lxml')
+        # Find the table of the page
+        table = soup.find('table')
+        # Iterate through class 'tr ts'
+        for idx, cls_ind in enumerate(table.find_all('td', class_='tr ts')):
+            # Append English meanings to dictionary
+            d[word]['Turkish'].append(str(cls_ind.text))
 
 # Write JSON file
 writeJSON(d, 'dict')
