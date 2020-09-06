@@ -85,10 +85,10 @@ URL_TUR = 'https://tureng.com/en/turkish-english/'
 # Read files
 d = readJSON('dict.json')  # JSON file
 
-# Iterate through words
-for idx, word in enumerate(readTextFile('inp.txt')):
-    # If -update arg is received
-    if sys.argv[1] == '-update':
+# If -update arg is received
+if sys.argv[1] == '-update':
+    # Iterate through words
+    for idx, word in enumerate(readTextFile('inp.txt')):
         # If word not in dict.json
         if word not in d:
             # Trace
@@ -119,39 +119,38 @@ for idx, word in enumerate(readTextFile('inp.txt')):
             for cls_ind in table.find_all('td', class_='tr ts'):
                 # Append English meanings to dictionary
                 d[word]['Turkish'].append(str(cls_ind.text))
-    # If -learn arg is received
-    elif sys.argv[1] == '-learn':
-        # Declare the prob distribution
-        words, prob_dist = calc_prob_dist(d)
-        # Get a sample according to the given arg
-        for word in random.choice(words, size=int(sys.argv[2]),
-                                  replace=False, p=prob_dist):
-            # Wait for enter to show the meanings
-            inp = input(f'{word.upper()}')
-            # If it is enter
-            if inp == '':
-                # Increment times_shown feature by one
-                d[word]['times_shown'] += 1
-                # Display English meanings
-                # Print in a format
-                print('English:')
-                # Declare English keys
-                eng_keys = d[word]['English'].keys()
-                # Iterate through keys
-                for eng_key in eng_keys:
-                    print(f'\t{eng_key}:')
-                    # Iterate through meanings
-                    for idx, eng_meaning in enumerate(d[word]['English'][eng_key]):
-                        # Print English meanings
-                        print(f'\t\t{idx}. {eng_meaning}')
-                # Display Turkish meanings
-                # Print in a format
-                print('Turkish:')
-                for idx, tur_meaning in enumerate(d[word]['Turkish']):
-                    # Print Turkish meanings
-                    print(f'\t{idx}. {tur_meaning}')
-        # End the session after the number of given arg
-        break
 
-        # Write JSON file
+# If -learn arg is received
+elif sys.argv[1] == '-learn':
+    # Declare the prob distribution
+    words, prob_dist = calc_prob_dist(d)
+    # Get a sample according to the given arg
+    for word in random.choice(words, size=int(sys.argv[2]),
+                              replace=False, p=prob_dist):
+        # Wait for enter to show the meanings
+        inp = input(f'{word.upper()}')
+        # If it is enter
+        if inp == '':
+            # Increment times_shown feature by one
+            d[word]['times_shown'] += 1
+            # Display English meanings
+            # Print in a format
+            print('English:')
+            # Declare English keys
+            eng_keys = d[word]['English'].keys()
+            # Iterate through keys
+            for eng_key in eng_keys:
+                print(f'\t{eng_key}:')
+                # Iterate through meanings
+                for idx, eng_meaning in enumerate(d[word]['English'][eng_key]):
+                    # Print English meanings
+                    print(f'\t\t{idx}. {eng_meaning}')
+            # Display Turkish meanings
+            # Print in a format
+            print('Turkish:')
+            for idx, tur_meaning in enumerate(d[word]['Turkish']):
+                # Print Turkish meanings
+                print(f'\t{idx}. {tur_meaning}')
+
+    # Write JSON file
 writeJSON(d, 'dict')
