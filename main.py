@@ -92,7 +92,7 @@ for word in readTextFile('inp.txt'):
         # If word not in dict.json
         if word not in d:
             d[word] = defaultdict(list, {
-                'English': list(), 'Turkish': list(), 'times_shown': 0
+                'English': list(), 'Turkish': list(), 'times_shown': 1
             })
             # Read Lexico website
             lexico = requests.get(URL_LEX + word).text
