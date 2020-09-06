@@ -135,9 +135,15 @@ for idx, word in enumerate(readTextFile('inp.txt')):
                 # Display English meanings
                 # Print in a format
                 print('English:')
-                for idx, eng_meaning in enumerate(d[word]['English']):
-                    # Print English meanings
-                    print(f'\t{idx}. {eng_meaning}')
+                # Declare English keys
+                eng_keys = d[word]['English'].keys()
+                # Iterate through keys
+                for eng_key in eng_keys:
+                    print(f'\t{eng_key}:')
+                    # Iterate through meanings
+                    for idx, eng_meaning in enumerate(d[word]['English'][eng_key]):
+                        # Print English meanings
+                        print(f'\t\t{idx}. {eng_meaning}')
                 # Display Turkish meanings
                 # Print in a format
                 print('Turkish:')
