@@ -119,8 +119,8 @@ for word in readTextFile('inp.txt'):
         # Declare the prob distribution
         words, prob_dist = calc_prob_dist(d)
         # Get a sample according to the given arg
-        for idx, word in enumerate(random.choice(words, size=int(sys.argv[2]),
-                                                 replace=False, p=prob_dist)):
+        for word in random.choice(words, size=int(sys.argv[2]),
+                                  replace=False, p=prob_dist):
             # Wait for enter to show the meanings
             inp = input(f'{word.upper()}')
             # If it is enter
@@ -130,13 +130,13 @@ for word in readTextFile('inp.txt'):
                 # Display English meanings
                 # Print in a format
                 print('English:')
-                for eng_meaning in d[word]['English']:
+                for idx, eng_meaning in enumerate(d[word]['English']):
                     # Print English meanings
                     print(f'\t{idx}. {eng_meaning}')
                 # Display Turkish meanings
                 # Print in a format
                 print('Turkish:')
-                for tur_meaning in d[word]['Turkish']:
+                for idx, tur_meaning in enumerate(d[word]['Turkish']):
                     # Print Turkish meanings
                     print(f'\t{idx}. {tur_meaning}')
         # End the session after the number of given arg
