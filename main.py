@@ -125,6 +125,8 @@ for word in readTextFile('inp.txt'):
             inp = input(f'{word.upper()}')
             # If it is enter
             if inp == '':
+                # Increment times_shown feature by one
+                d[word]['times_shown'] += 1
                 # Display English meanings
                 # Print in a format
                 print('English:')
