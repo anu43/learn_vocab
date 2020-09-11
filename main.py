@@ -91,34 +91,39 @@ if sys.argv[1] == '-update':
     for idx, word in enumerate(readTextFile('inp.txt')):
         # If word not in dict.json
         if word not in d:
-            # Trace
-            print(f'Handling {word}, line: {idx}')
-            # Setup within key in dictionary
-            d[word] = defaultdict(list, {
-                'English': {}, 'Turkish': list(), 'times_shown': 1
-            })
-            # Read Lexico website
-            lexico = requests.get(URL_LEX + word).text
-            # Create BeautifulSoup obj of the Lexico website
-            soup = BeautifulSoup(lexico, 'lxml')
-            # Find the sections of the page
-            for section in soup.find_all('section', class_='gramb'):
-                typ = section.find('span', class_='pos').text
-                d[word]['English'][typ] = list()
-                # Iterate through class 'ind'
-                for cls_ind in section.find_all('span', class_='ind'):
+            # Try finding missing words' meanings
+            try:
+                # Trace
+                print(f'Handling {word}, line: {idx}')
+                # Setup within key in dictionary
+                d[word] = defaultdict(list, {
+                    'English': {}, 'Turkish': list(), 'times_shown': 1
+                })
+                # Read Lexico website
+                lexico = requests.get(URL_LEX + word).text
+                # Create BeautifulSoup obj of the Lexico website
+                soup = BeautifulSoup(lexico, 'lxml')
+                # Find the sections of the page
+                for section in soup.find_all('section', class_='gramb'):
+                    typ = section.find('span', class_='pos').text
+                    d[word]['English'][typ] = list()
+                    # Iterate through class 'ind'
+                    for cls_ind in section.find_all('span', class_='ind'):
+                        # Append English meanings to dictionary
+                        d[word]['English'][typ].append(str(cls_ind.text))
+                # Read TurEng website
+                tureng = requests.get(URL_TUR + word).text
+                # Create BeautifulSoup obj of the TurEng website
+                soup = BeautifulSoup(tureng, 'lxml')
+                # Find the table of the page
+                table = soup.find('table')
+                # Iterate through class 'tr ts'
+                for cls_ind in table.find_all('td', class_='tr ts'):
                     # Append English meanings to dictionary
-                    d[word]['English'][typ].append(str(cls_ind.text))
-            # Read TurEng website
-            tureng = requests.get(URL_TUR + word).text
-            # Create BeautifulSoup obj of the TurEng website
-            soup = BeautifulSoup(tureng, 'lxml')
-            # Find the table of the page
-            table = soup.find('table')
-            # Iterate through class 'tr ts'
-            for cls_ind in table.find_all('td', class_='tr ts'):
-                # Append English meanings to dictionary
-                d[word]['Turkish'].append(str(cls_ind.text))
+                    d[word]['Turkish'].append(str(cls_ind.text))
+            except Exception as e:
+                print(f'Couldnt handle {word}')
+                print(f'error: {e}')
 
 # If -learn arg is received
 elif sys.argv[1] == '-learn':
